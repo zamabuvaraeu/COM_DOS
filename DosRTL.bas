@@ -1,6 +1,6 @@
 #include once "DosRTL.bi"
 
-Declare Function DosMain() As Long
+Declare Function DosMain cdecl() As Long
 
 Const DosStringBufferCapacity As UByte = 254 - 3
 Dim Shared DosStringBuffer As ZString * (DosStringBufferCapacity + 1)
@@ -14,7 +14,7 @@ Sub EntryPoint Naked()
 	End Asm
 End Sub
 
-Function InputDosString()As ZString Ptr
+Function InputDosString cdecl()As ZString Ptr
 	
 	Dim lpBuffer As ZString Ptr = @DosStringBuffer
 	lpBuffer[0] = DosStringBufferCapacity
@@ -29,7 +29,7 @@ Function InputDosString()As ZString Ptr
 	
 End Function
 
-Sub PrintDosString(ByVal pChar As ZString Ptr)
+Sub PrintDosString cdecl(ByVal pChar As ZString Ptr)
 	Dim bbb As UInteger = CUInt(pChar)
 	Asm
 		mov edx, bbb
