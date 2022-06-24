@@ -3,6 +3,7 @@
 Declare Function DosMain() As Long
 
 Const HelloWorld = !"Greetings. What is your name?\r\n$"
+' Const HelloWorld = !"LOOO. What is your name?\r\n$"
 Const Ololo = !"Hello from FreeBASIC, $"
 
 Const DosStringBufferCapacity As UByte = 254 - 3
@@ -23,7 +24,7 @@ Function InputDosString()As ZString Ptr
 	lpBuffer[0] = DosStringBufferCapacity
 	
 	Asm
-		mov	edx, dword ptr [ebp-8]
+		mov	edx, lpBuffer
 		mov	ah, &h0A
 		int	&h21
 	End Asm
@@ -33,8 +34,10 @@ Function InputDosString()As ZString Ptr
 End Function
 
 Sub PrintDosString(ByVal pChar As ZString Ptr)
+	Dim bbb As UInteger = CUInt(pChar)
 	Asm
-		mov	edx, dword ptr [ebp+8]
+		mov edx, bbb
+		' mov	dx, ax
 		mov	ah, &h09
 		int	&h21
 	End Asm
