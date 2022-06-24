@@ -19,9 +19,10 @@ Function InputDosString cdecl()As ZString Ptr
 	Dim lpBuffer As ZString Ptr = @DosStringBuffer
 	lpBuffer[0] = DosStringBufferCapacity
 	
+	Dim OffsetInSegment As UShort = LoWord(CUInt(lpBuffer))
+	
 	Asm
-		mov    edx, lpBuffer
-		' mov    dx, lpBuffer
+		mov    dx, OffsetInSegment
 		mov    ah, &h0A
 		int    &h21
 	End Asm
@@ -32,11 +33,10 @@ End Function
 
 Sub PrintDosString cdecl(ByVal pChar As ZString Ptr)
 	
-	Dim bbb As UInteger = CUInt(pChar)
+	Dim OffsetInSegment As UShort = LoWord(CUInt(pChar))
 	
 	Asm
-		mov    edx, bbb
-		' mov    dx, bbb
+		mov    dx, OffsetInSegment
 		mov    ah, &h09
 		int    &h21
 	End Asm
