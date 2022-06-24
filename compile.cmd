@@ -11,20 +11,20 @@ set GCC_OPTIMIZATION=-Wall -Werror -Wno-unused-label -Wno-unused-function -Wno-u
 
 del obj\*.o obj\*.asm obj\*.exe bin\*.com obj\*.c
 
-REM %FREEBASIC_COMPILER% -gen gas -r -w error -maxerr 1 -O 0 -s console "MiniRuntime.bas"
+REM %FREEBASIC_COMPILER% -gen gcc -r -w error -maxerr 1 -O 0 -s console "MiniRuntime.bas"
 %FREEBASIC_COMPILER% -gen gcc -r -w error -maxerr 1 -O 0 -s console "dos.bas"
-REM move /y "dos.asm" "obj\dos.asm"
+move /y "MiniRuntime.c" "obj\MiniRuntime.c"
 move /y "dos.c" "obj\dos.c"
 REM replace.vbs "MiniRuntime.c" 
-replace.vbs "obj\dos.c"
+REM replace.vbs "obj\dos.c"
 
-REM %GCC_COMPILER% %GCC_OPTIMIZATION% -masm=intel -S -Os "MiniRuntime.c" -o "MiniRuntime.asm"
+REM %GCC_COMPILER% %GCC_OPTIMIZATION% -masm=intel -S -Ofast "obj\MiniRuntime.c" -o "obj\MiniRuntime.asm"
 %GCC_COMPILER% %GCC_OPTIMIZATION% -masm=intel -S -Ofast "obj\dos.c" -o "obj\dos.asm"
 
-REM %GCC_ASSEMBLER% --32 "MiniRuntime.asm" -o "MiniRuntime.o"
+REM %GCC_ASSEMBLER% --32 --strip-local-absolute "obj\MiniRuntime.asm" -o "obj\MiniRuntime.o"
 %GCC_ASSEMBLER% --32 --strip-local-absolute "obj\dos.asm" -o "obj\dos.o"
 
-REM %GCC_LINKER% -m i386pe -subsystem console -e _ENTRYPOINT@0 --stack 1048576,1048576 --no-seh -L "." -s --gc-sections --nmagic --script=com.ld "MiniRuntime.o" "dos.o" -o "dos.exe"
+REM %GCC_LINKER% -m i386pe -subsystem console -e _ENTRYPOINT@0 --stack 1048576,1048576 --no-seh -L "." -s --gc-sections --strip-all --nmagic --script=com.ld "obj\MiniRuntime.o" "obj\dos.o" -o "obj\dos.exe"
 %GCC_LINKER% -m i386pe -subsystem console -e _ENTRYPOINT@0 --stack 1048576,1048576 --no-seh -L "." -s -gc-sections --strip-all --nmagic --script=com.ld "obj\dos.o" -o "obj\dos.exe"
 
 "C:\Program Files (x86)\mingw32\bin\objcopy.exe" -O binary -j .text "obj\dos.exe" "bin\dos.com"

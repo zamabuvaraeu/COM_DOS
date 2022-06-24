@@ -1,52 +1,12 @@
-#include once "MiniRuntime.bi"
+#include once "MiniRuntime.bas"
 
-Declare Function DosMain() As Long
-
-Const HelloWorld = !"Greetings. What is your name?\r\n$"
-' Const HelloWorld = !"LOOO. What is your name?\r\n$"
-Const Ololo = !"Hello from FreeBASIC, $"
-
-Const DosStringBufferCapacity As UByte = 254 - 3
-Dim Shared DosStringBuffer As ZString * (DosStringBufferCapacity + 1)
-
-Sub EntryPoint Naked()
-	Asm
-		.code16gcc
-		call	DosMain
-		mov	ah, &h4C
-		int	&h21
-	End Asm
-End Sub
-
-Function InputDosString()As ZString Ptr
-	
-	Dim lpBuffer As ZString Ptr = @DosStringBuffer
-	lpBuffer[0] = DosStringBufferCapacity
-	
-	Asm
-		mov	edx, lpBuffer
-		mov	ah, &h0A
-		int	&h21
-	End Asm
-	
-	Return lpBuffer
-	
-End Function
-
-Sub PrintDosString(ByVal pChar As ZString Ptr)
-	Dim bbb As UInteger = CUInt(pChar)
-	Asm
-		mov edx, bbb
-		' mov	dx, ax
-		mov	ah, &h09
-		int	&h21
-	End Asm
-End Sub
+Const Greetings = !"Greetings. What is your name?\r\n$"
+Const Hello = !"Hello from FreeBASIC, $"
 
 Function DosMain()As Long
 	
 	Scope
-		Dim lpHello As ZString Ptr = @HelloWorld
+		Dim lpHello As ZString Ptr = @Greetings
 		PrintDosString(lpHello)
 	End Scope
 	
@@ -57,7 +17,7 @@ Function DosMain()As Long
 	lpName[Length + 4] = Asc("$")
 		
 	Scope
-		Dim lpOlolo As ZString Ptr = @Ololo
+		Dim lpOlolo As ZString Ptr = @Hello
 		PrintDosString(lpOlolo)
 	End Scope
 	
