@@ -1,4 +1,4 @@
-#include once "MiniRuntime.bas"
+#include once "DosRTL.bas"
 
 Const Greetings = !"Greetings. What is your name?\r\n$"
 Const Hello = !"Hello from FreeBASIC, $"

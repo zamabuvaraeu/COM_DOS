@@ -1,4 +1,4 @@
-#include once "MiniRuntime.bi"
+#include once "DosRTL.bi"
 
 Declare Function DosMain() As Long
 
