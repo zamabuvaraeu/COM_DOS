@@ -7,8 +7,8 @@ Type DosStringBuffer
 End Type
 
 
-Declare Sub EntryPoint Naked()
+Declare Sub EntryPoint Naked Cdecl()
 
-Declare Sub PrintDosString cdecl(ByVal pChar As ZString Ptr)
+Declare Sub PrintDosString Cdecl(ByVal pChar As ZString Ptr)
 
-Declare Sub InputDosString cdecl(ByVal lpBuffer As DosStringBuffer Ptr)
+Declare Sub InputDosString Cdecl(ByVal lpBuffer As DosStringBuffer Ptr)

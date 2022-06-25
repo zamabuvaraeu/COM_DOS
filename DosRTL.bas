@@ -1,17 +1,16 @@
 #include once "DosRTL.bi"
 
-Declare Function DosMain cdecl() As Long
+Declare Function DosMain cdecl() As UByte
 
-Sub EntryPoint Naked()
+Sub EntryPoint Naked Cdecl()
 	Asm
-		.code16gcc
 		call   DosMain
 		mov    ah, &h4C
 		int    &h21
 	End Asm
 End Sub
 
-Sub InputDosString cdecl(ByVal lpBuffer As DosStringBuffer Ptr)
+Sub InputDosString Cdecl(ByVal lpBuffer As DosStringBuffer Ptr)
 	
 	Dim OffsetInSegment As UShort = LoWord(CUInt(lpBuffer))
 	
@@ -23,7 +22,7 @@ Sub InputDosString cdecl(ByVal lpBuffer As DosStringBuffer Ptr)
 	
 End Sub
 
-Sub PrintDosString cdecl(ByVal pChar As ZString Ptr)
+Sub PrintDosString Cdecl(ByVal pChar As ZString Ptr)
 	
 	Dim OffsetInSegment As UShort = LoWord(CUInt(pChar))
 	

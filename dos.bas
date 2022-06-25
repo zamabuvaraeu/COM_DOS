@@ -3,7 +3,7 @@
 Const Greetings = !"Greetings. What is your name?\r\n$"
 Const Hello = !"Hello from FreeBASIC, $"
 
-Function DosMain cdecl()As Long
+Function DosMain Cdecl()As UByte
 	
 	Scope
 		Dim lpHello As ZString Ptr = @Greetings
