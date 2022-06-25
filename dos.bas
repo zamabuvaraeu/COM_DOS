@@ -10,18 +10,22 @@ Function DosMain cdecl()As Long
 		PrintDosString(lpHello)
 	End Scope
 	
-	Dim lpName As ZString Ptr = InputDosString()
-	Dim Length As UByte = lpName[1]
-	lpName[Length + 2] = 13
-	lpName[Length + 3] = 10
-	lpName[Length + 4] = Asc("$")
+	Dim UserName As DosStringBuffer = Any
+	UserName.Capacity = DosStringBufferCapacity
+	
+	InputDosString(@UserName)
+	
+	Dim Length As UByte = UserName.Length
+	UserName.DosString[Length + 0] = 13
+	UserName.DosString[Length + 1] = 10
+	UserName.DosString[Length + 2] = Asc("$")
 		
 	Scope
 		Dim lpOlolo As ZString Ptr = @Hello
 		PrintDosString(lpOlolo)
 	End Scope
 	
-	PrintDosString(@lpName[2])
+	PrintDosString(@UserName.DosString)
 	
 	Return 0
 	

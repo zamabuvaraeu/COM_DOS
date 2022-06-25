@@ -2,9 +2,6 @@
 
 Declare Function DosMain cdecl() As Long
 
-Const DosStringBufferCapacity As UByte = 254 - 3
-Dim Shared DosStringBuffer As ZString * (DosStringBufferCapacity + 1)
-
 Sub EntryPoint Naked()
 	Asm
 		.code16gcc
@@ -14,10 +11,7 @@ Sub EntryPoint Naked()
 	End Asm
 End Sub
 
-Function InputDosString cdecl()As ZString Ptr
-	
-	Dim lpBuffer As ZString Ptr = @DosStringBuffer
-	lpBuffer[0] = DosStringBufferCapacity
+Sub InputDosString cdecl(ByVal lpBuffer As DosStringBuffer Ptr)
 	
 	Dim OffsetInSegment As UShort = LoWord(CUInt(lpBuffer))
 	
@@ -27,9 +21,7 @@ Function InputDosString cdecl()As ZString Ptr
 		int    &h21
 	End Asm
 	
-	Return lpBuffer
-	
-End Function
+End Sub
 
 Sub PrintDosString cdecl(ByVal pChar As ZString Ptr)
 	

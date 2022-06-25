@@ -20,6 +20,6 @@ replace.vbs "obj\dos.c"
 
 %GCC_ASSEMBLER% --32 --strip-local-absolute "obj\dos.asm" -o "obj\dos.o"
 
-%GCC_LINKER% -m i386pe -subsystem console -e _ENTRYPOINT@0 --stack 1048576,1048576 --no-seh -L "." -s -gc-sections --strip-all --nmagic --script=com.ld "obj\dos.o" -o "obj\dos.exe"
+%GCC_LINKER% -m i386pe -subsystem console -e _ENTRYPOINT@0 --stack 1048576,1048576 --no-seh -L "." -s --strip-all --gc-sections --print-gc-sections --nmagic --script=com.ld "obj\dos.o" -o "obj\dos.exe"
 
 %OBJCOPY_UTIL% -O binary -j .text "obj\dos.exe" "bin\dos.com"
