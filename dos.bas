@@ -1,12 +1,12 @@
 #include once "DosRTL.bas"
 
-Const Greetings = !"Greetings. What is your name?\r\n"
-Const Hello = !"Hello from FreeBASIC, "
+Const Greetings = !"Greetings. What is your name?\r\n$"
+Const Hello = !"Hello from FreeBASIC, $"
 
 Function DosMain Cdecl()As UByte
 	
 	Scope
-		PrintStringA(Greetings, Len(Greetings))
+		PrintDosString(Greetings)
 	End Scope
 	
 	Dim UserName As DosStringBuffer = Any
@@ -17,12 +17,13 @@ Function DosMain Cdecl()As UByte
 	Dim Length As UByte = UserName.Length
 	UserName.DosString[Length + 0] = 13
 	UserName.DosString[Length + 1] = 10
+	UserName.DosString[Length + 2] = Asc("$")
 		
 	Scope
-		PrintStringA(Hello, Len(Hello))
+		PrintDosString(Hello)
 	End Scope
 	
-	PrintStringA(@UserName.DosString, UserName.Length + 2)
+	PrintDosString(@UserName.DosString)
 	
 	Return 0
 	
