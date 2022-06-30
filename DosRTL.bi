@@ -26,3 +26,7 @@ Declare Function IntToStr Cdecl( _
 	ByVal n As Integer, _
 	ByVal pBuffer As ZString Ptr _
 )As Integer
+
+Declare Function StrToInt Cdecl( _
+	ByVal pBuffer As ZString Ptr _
+)As Integer

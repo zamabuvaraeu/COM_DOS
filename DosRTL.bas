@@ -115,3 +115,35 @@ Function IntToStr Cdecl( _
 	Return j
 	
 End Function
+
+Function StrToInt Cdecl( _
+		ByVal pBuffer As ZString Ptr _
+	)As Integer
+	
+	Dim Number As Integer = 0
+	Dim i As Integer = Any
+	Dim Sign As UInteger = Any
+	
+	If pBuffer[0] = Asc("-") Then
+		Sign = -1
+		i = 1
+	Else
+		Sign = 0
+		i = 0
+	End If
+	
+	Do While pBuffer[i] >= &h30 AndAlso pBuffer[i] <= &h39
+		Dim Digit As Integer = pBuffer[i] And &h0F
+		Number = Number + Digit
+		Number = Number * 10
+		i += 1
+	Loop
+	
+	Number = Number \ 10
+	If sign then
+		Return -Number
+	End If
+	
+	Return Number
+	
+End Function
