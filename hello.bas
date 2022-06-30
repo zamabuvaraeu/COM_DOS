@@ -10,15 +10,17 @@ Function DosMain Cdecl()As UByte
 	End Scope
 	
 	Dim UserName As DosStringBuffer = Any
-	UserName.Capacity = DosStringBufferCapacity
-	
-	InputDosString(@UserName)
-	
-	Dim Length As UByte = UserName.Length
-	UserName.DosString[Length + 0] = 13
-	UserName.DosString[Length + 1] = 10
-	UserName.DosString[Length + 2] = Asc("$")
+	Scope
+		UserName.Capacity = DosStringBufferCapacity
 		
+		InputDosString(@UserName)
+		
+		Dim Length As UByte = UserName.Length
+		UserName.DosString[Length + 0] = 13
+		UserName.DosString[Length + 1] = 10
+		UserName.DosString[Length + 2] = Asc("$")
+	End Scope
+	
 	Scope
 		PrintDosString(Hello)
 	End Scope

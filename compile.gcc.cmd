@@ -12,14 +12,14 @@ set GCC_OPTIMIZATION=-Wall -Werror -Wno-unused-label -Wno-unused-function -Wno-u
 
 del obj\*.o obj\*.asm obj\*.exe bin\*.com obj\*.c
 
-%FREEBASIC_COMPILER% -gen gcc -r -w error -maxerr 1 -O 0 -s console "dos.bas"
-move /y "dos.c" "obj\dos.c"
-replace.vbs "obj\dos.c"
+%FREEBASIC_COMPILER% -gen gcc -r -w error -maxerr 1 -O 0 -s console "hello.bas"
+move /y "hello.c" "obj\hello.c"
+replace.vbs "obj\hello.c"
 
-%GCC_COMPILER% %GCC_OPTIMIZATION% -m16 -masm=intel -march=i386 -S -Ofast "obj\dos.c" -o "obj\dos.asm"
+%GCC_COMPILER% %GCC_OPTIMIZATION% -m16 -masm=intel -march=i386 -S -Ofast "obj\hello.c" -o "obj\hello.asm"
 
-%GCC_ASSEMBLER% --32 --strip-local-absolute "obj\dos.asm" -o "obj\dos.o"
+%GCC_ASSEMBLER% --32 --strip-local-absolute "obj\hello.asm" -o "obj\hello.o"
 
-%GCC_LINKER% -m i386pe -subsystem console -e _ENTRYPOINT --stack 1048576,1048576 --no-seh -L "." -s --strip-all --gc-sections --print-gc-sections --nmagic --script=com.ld "obj\dos.o" -o "obj\dos.exe"
+%GCC_LINKER% -m i386pe -subsystem console -e _ENTRYPOINT --stack 1048576,1048576 --no-seh -L "." -s --strip-all --gc-sections --print-gc-sections --nmagic --script=com.ld "obj\hello.o" -o "obj\hello.exe"
 
-%OBJCOPY_UTIL% -O binary -j .text "obj\dos.exe" "bin\dos.com"
+%OBJCOPY_UTIL% -O binary -j .text "obj\hello.exe" "bin\hello.com"
