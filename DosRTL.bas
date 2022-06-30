@@ -10,7 +10,9 @@ Sub EntryPoint Naked Cdecl()
 	End Asm
 End Sub
 
-Sub InputDosString Cdecl(ByVal lpBuffer As DosStringBuffer Ptr)
+Sub InputDosString Cdecl( _
+		ByVal lpBuffer As DosStringBuffer Ptr _
+	)
 	
 	Dim OffsetInSegment As UShort = LoWord(CUInt(lpBuffer))
 	
@@ -22,7 +24,9 @@ Sub InputDosString Cdecl(ByVal lpBuffer As DosStringBuffer Ptr)
 	
 End Sub
 
-Sub PrintDosString Cdecl(ByVal pChar As ZString Ptr)
+Sub PrintDosString Cdecl( _
+		ByVal pChar As ZString Ptr _
+	)
 	
 	Dim OffsetInSegment As UShort = LoWord(CUInt(pChar))
 	
@@ -33,3 +37,32 @@ Sub PrintDosString Cdecl(ByVal pChar As ZString Ptr)
 	End Asm
 	
 End Sub
+
+Function PrintStringA Cdecl( _
+		ByVal pChar As ZString Ptr, _
+		ByVal Length As Short _
+	)As Short
+	
+	Dim OffsetInSegment As UShort = LoWord(CUInt(pChar))
+	Dim RealLength As Short = Any
+	
+	/'
+	Ввод:	АН = 40h
+	ВХ = 1 для STDOUT или 2 для STDERR
+	DS:DX = адрес начала строки
+	СХ = длина строки
+	Вывод:	CF = 0,
+	АХ = число записанных байт
+	'/
+	Asm
+		mov    ah, &h40
+		mov    bx, 1
+		mov    cx, Length
+		mov    dx, OffsetInSegment
+		int    &h21
+		mov    RealLength, ax
+	End Asm
+	
+	Return RealLength
+	
+End Function

@@ -16,7 +16,7 @@ del obj\*.o obj\*.asm obj\*.exe bin\*.com obj\*.c
 move /y "dos.c" "obj\dos.c"
 replace.vbs "obj\dos.c"
 
-%GCC_COMPILER% %GCC_OPTIMIZATION% -m16 -masm=intel -S -Ofast "obj\dos.c" -o "obj\dos.asm"
+%GCC_COMPILER% %GCC_OPTIMIZATION% -m16 -masm=intel -march=i386 -S -Ofast "obj\dos.c" -o "obj\dos.asm"
 
 %GCC_ASSEMBLER% --32 --strip-local-absolute "obj\dos.asm" -o "obj\dos.o"
 
