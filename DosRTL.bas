@@ -46,14 +46,6 @@ Function PrintStringA Cdecl( _
 	Dim OffsetInSegment As UShort = LoWord(CUInt(pChar))
 	Dim RealLength As Short = Any
 	
-	/'
-	Ввод:	АН = 40h
-	ВХ = 1 для STDOUT или 2 для STDERR
-	DS:DX = адрес начала строки
-	СХ = длина строки
-	Вывод:	CF = 0,
-	АХ = число записанных байт
-	'/
 	Asm
 		mov    ah, &h40
 		mov    bx, 1
@@ -86,15 +78,13 @@ Function IntToStr Cdecl( _
 			k = Value
 		End If
 		
-		Scope
-			Do
-				Dim Digit As Integer = k Mod 10
-				k = k \ 10
-				Dim AsciiDigit As Integer = Digit + &h30
-				Chars[Digits] = AsciiDigit
-				Digits += 1
-			Loop While k > 0
-		End Scope
+		Do
+			Dim Digit As Integer = k Mod 10
+			k = k \ 10
+			Dim AsciiDigit As Integer = Digit + &h30
+			Chars[Digits] = AsciiDigit
+			Digits += 1
+		Loop While k > 0
 	End Scope
 	
 	If Sign Then
