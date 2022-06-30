@@ -21,3 +21,8 @@ Declare Function PrintStringA Cdecl( _
 Declare Sub InputDosString Cdecl( _
 	ByVal lpBuffer As DosStringBuffer Ptr _
 )
+
+Declare Function IntToStr Cdecl( _
+	ByVal n As Integer, _
+	ByVal pBuffer As ZString Ptr _
+)As Integer
