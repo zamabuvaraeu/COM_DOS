@@ -15,22 +15,31 @@ del obj\*.o obj\*.asm obj\*.exe bin\*.com obj\*.c
 
 %FREEBASIC_COMPILER% -gen gcc -r -w error -maxerr 1 -O 0 -s console "hello.bas"
 %FREEBASIC_COMPILER% -gen gcc -r -w error -maxerr 1 -O 0 -s console "psp.bas"
+%FREEBASIC_COMPILER% -gen gcc -r -w error -maxerr 1 -O 0 -s console "minimum.bas"
 move /y "hello.c" "obj\hello.c"
 move /y "psp.c" "obj\psp.c"
+move /y "minimum.c" "obj\minimum.c"
 replace.vbs "obj\hello.c"
 replace.vbs "obj\psp.c"
+replace.vbs "obj\minimum.c"
 
 %GCC_COMPILER% %GCC_OPTIMIZATION% -std=gnu99 -DDOS -m16 -masm=intel -march=i386 -S -Ofast "obj\hello.c" -o "obj\hello.asm"
 %GCC_COMPILER% %GCC_OPTIMIZATION% -std=gnu99 -DDOS -m16 -masm=intel -march=i386 -S -Ofast "obj\psp.c" -o "obj\psp.asm"
+%GCC_COMPILER% %GCC_OPTIMIZATION% -std=gnu99 -DDOS -m16 -masm=intel -march=i386 -S -Ofast "obj\minimum.c" -o "obj\minimum.asm"
 
 %GCC_ASSEMBLER% --32 --strip-local-absolute "obj\hello.asm" -o "obj\hello.o"
 %GCC_ASSEMBLER% --32 --strip-local-absolute "obj\psp.asm" -o "obj\psp.o"
+%GCC_ASSEMBLER% --32 --strip-local-absolute "obj\minimum.asm" -o "obj\minimum.o"
 
 %GCC_LINKER% -m i386pe -subsystem console -e _ENTRYPOINT --stack 1048576,1048576 --no-seh -L "." -s --strip-all --gc-sections --print-gc-sections --nmagic --script=com.ld "obj\hello.o" -o "obj\hello.exe"
 %GCC_LINKER% -m i386pe -subsystem console -e _ENTRYPOINT --stack 1048576,1048576 --no-seh -L "." -s --strip-all --gc-sections --print-gc-sections --nmagic --script=com.ld "obj\psp.o" -o "obj\psp.exe"
+%GCC_LINKER% -m i386pe -subsystem console -e _ENTRYPOINT --stack 1048576,1048576 --no-seh -L "." -s --strip-all --gc-sections --print-gc-sections --nmagic --script=com.ld "obj\minimum.o" -o "obj\minimum.exe"
 
 %OBJCOPY_UTIL% -O binary -j .text "obj\hello.exe" "bin\hello.com"
 REM %OBJDUMP_UTIL% -M intel -D -b binary -m i386 --adjust-vma=0x100 "bin\hello.com"
 
 %OBJCOPY_UTIL% -O binary -j .text "obj\psp.exe" "bin\psp.com"
 REM %OBJDUMP_UTIL% -M intel -D -b binary -m i386 --adjust-vma=0x100 "bin\psp.com"
+
+%OBJCOPY_UTIL% -O binary -j .text "obj\minimum.exe" "bin\minimum.com"
+REM %OBJDUMP_UTIL% -M intel -D -b binary -m i386 --adjust-vma=0x100 "bin\minimum.com"
