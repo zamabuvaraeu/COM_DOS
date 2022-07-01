@@ -6,7 +6,8 @@ Const Hello = !"Hello from FreeBASIC, $"
 Function DosMain Cdecl()As UByte
 	
 	Scope
-		PrintDosString(Greetings)
+		Dim p As ZString Ptr = @Greetings
+		PrintDosString(p)
 	End Scope
 	
 	Dim UserName As DosStringBuffer = Any
@@ -22,10 +23,14 @@ Function DosMain Cdecl()As UByte
 	End Scope
 	
 	Scope
-		PrintDosString(Hello)
+		Dim p As ZString Ptr = @Hello
+		PrintDosString(p)
 	End Scope
 	
-	PrintDosString(@UserName.DosString)
+	Scope
+		Dim p As ZString Ptr = @UserName.DosString
+		PrintDosString(p)
+	End Scope
 	
 	Return 0
 	
