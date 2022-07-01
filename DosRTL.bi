@@ -1,4 +1,10 @@
+#ifndef DOSRTL_BI
+#define DOSRTL_BI
+
 Const DosStringBufferCapacity As UByte = 255 - SizeOf(UByte) - SizeOf(UByte)
+
+Type DWORD As ULong
+Type WORD As UShort
 
 Type DosStringBuffer
 	Capacity As UByte
@@ -6,8 +12,7 @@ Type DosStringBuffer
 	DosString As ZString * (DosStringBufferCapacity)
 End Type
 
-Type DWORD As ULong
-Type WORD As UShort
+#define MakeDword(low, high) (Cast(ULong, (Cast(UShort, high) And &hFFFF) Shl 16) Or (Cast(UShort, low) And &hFFFF))
 
 Type ProgramSegmentPrefix Field = 1
 	Int20hCode(1) As UByte          ' 2, Содержит код INT 20 выхода из программы в стиле CP/M (для совместимости)
@@ -17,7 +22,7 @@ Type ProgramSegmentPrefix Field = 1
 	lpTerminateAddress As DWORD     ' 4, Адрес обработчика Terminate предыдущей программы (предыдущий INT 22)
 	lpControlBreal As DWORD         ' 4, Адрес обработчика Break предыдущей программы (предыдущий INT 23)
 	lpCriticalError As DWORD        ' 4, Адрес обработчика критических ошибок предыдущей программы (предыдущий INT 24)
-	lpParentPspHiWord As WORD       ' 2, Сегмент PSP вызывающего процесса (как правило, command.com — внутренний)
+	ParentPspSegment As WORD        ' 2, Сегмент PSP вызывающего процесса (как правило, command.com — внутренний)
 	FileTable(19) As UByte          ' 20, Job File Table (внутренняя)
 	lpEnvironmentHiWord As WORD     ' 2, Сегмент переменных среды
 	SsSpStackHiWord As DWORD        ' 4, SS:SP на входе к последнему вызову INT 21 (внутренний)
@@ -55,3 +60,5 @@ Declare Function IntToStr Cdecl( _
 Declare Function StrToInt Cdecl( _
 	ByVal pBuffer As ZString Ptr _
 )As Integer
+
+#endif

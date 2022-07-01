@@ -1,9 +1,13 @@
 #include once "DosRTL.bi"
 
-Declare Function DosMain cdecl() As UByte
+Declare Function DosMain cdecl( _
+	ByVal SegmentAddress As DWORD _
+)As UByte
 
 Sub EntryPoint Naked Cdecl()
 	Asm
+		mov    ax, ds
+		push   eax
 		call   DosMain
 		mov    ah, &h4C
 		int    &h21
@@ -65,7 +69,7 @@ Function IntToStr Cdecl( _
 	)As Integer
 	
 	Dim Sign As UInteger = Any
-	Dim Chars As ZString * 40 = Any
+	Dim Chars As ZString * 16 = Any
 	Dim Digits As Integer = 0
 	
 	Scope
