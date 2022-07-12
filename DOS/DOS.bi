@@ -1,18 +1,19 @@
 #ifndef DOSRTL_BI
 #define DOSRTL_BI
 
+Type WORD As UShort
+Type DWORD As ULong
+
+#define MakeDword(low, high) (Cast(ULong, (Cast(UShort, high) And &hFFFF) Shl 16) Or (Cast(UShort, low) And &hFFFF))
+
 Const DosStringBufferCapacity As UByte = 255 - SizeOf(UByte) - SizeOf(UByte)
 
-Type DWORD As ULong
-Type WORD As UShort
-
 Type DosStringBuffer
-	Capacity As UByte
+	cbSize As UByte
 	Length As UByte
 	DosString As ZString * (DosStringBufferCapacity)
 End Type
 
-#define MakeDword(low, high) (Cast(ULong, (Cast(UShort, high) And &hFFFF) Shl 16) Or (Cast(UShort, low) And &hFFFF))
 
 Type ProgramSegmentPrefix Field = 1
 	Int20hCode(1) As UByte          ' 2, Содержит код INT 20 выхода из программы в стиле CP/M (для совместимости)
@@ -24,8 +25,8 @@ Type ProgramSegmentPrefix Field = 1
 	lpCriticalError As DWORD        ' 4, Адрес обработчика критических ошибок предыдущей программы (предыдущий INT 24)
 	ParentPspSegment As WORD        ' 2, Сегмент PSP вызывающего процесса (как правило, command.com — внутренний)
 	FileTable(19) As UByte          ' 20, Job File Table (внутренняя)
-	lpEnvironmentHiWord As WORD     ' 2, Сегмент переменных среды
-	SsSpStackHiWord As DWORD        ' 4, SS:SP на входе к последнему вызову INT 21 (внутренний)
+	EnvironmentSegment As WORD      ' 2, Сегмент переменных среды
+	SsSpStack As DWORD              ' 4, SS:SP на входе к последнему вызову INT 21 (внутренний)
 	MaxOpenFiles As WORD            ' 2, максимальное количество открытых файлов (внутренний)
 	FileTBA As DWORD                ' 4, Адрес ручных записей (внутренний)
 	Reserved2(23) As UByte          ' 24, Зарезервировано
@@ -37,20 +38,34 @@ Type ProgramSegmentPrefix Field = 1
 	CommandLine As ZString * 127    ' 127, Командная строка (завершается &h0D)
 End Type
 
-Declare Sub EntryPoint Naked Cdecl()
+Extern ProgramSegmentPrefix Alias "ProgramSegmentPrefix" As ProgramSegmentPrefix
 
-Declare Sub PrintDosString Cdecl( _
+Type SegmentRegisters Field = 1
+	CodeSegment As WORD
+	DataSegment As WORD
+	StackSegment As WORD
+	ExtraSegment As WORD
+End Type
+
+Type FarPointer Field = 1
+	Segment As WORD
+	Offset As WORD
+End Type
+
+Declare Sub EntryPoint __Thiscall()
+
+Declare Sub InputDosString __Thiscall( _
+	ByVal lpBuffer As DosStringBuffer Ptr _
+)
+
+Declare Sub PrintDosString __Thiscall( _
 	ByVal pChar As ZString Ptr _
 )
 
 Declare Function PrintStringA Cdecl( _
 	ByVal p As ZString Ptr, _
-	ByVal Length As Short _
+	ByVal Length As Integer _
 )As Short
-
-Declare Sub InputDosString Cdecl( _
-	ByVal lpBuffer As DosStringBuffer Ptr _
-)
 
 Declare Function IntToStr Cdecl( _
 	ByVal n As Integer, _
